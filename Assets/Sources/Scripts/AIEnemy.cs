@@ -15,6 +15,7 @@ public enum EnemyStates
 public class AIEnemy : MonoBehaviour, IDamageFromWeapon
 {
     public static Action OnZombieDied;
+   [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float _playerAttackField;
     [SerializeField] private float _homeAttackField;
     [SerializeField] private float _moveSpeed;
@@ -57,9 +58,10 @@ public class AIEnemy : MonoBehaviour, IDamageFromWeapon
 
     private void Die()
     {
-
+        gameObject.layer = LayerMask.NameToLayer("DiedZombie");
         _aiAgent.speed = 0;
         _animator.SetTrigger("Die");
+        this.enabled = false;
         
         OnZombieDied?.Invoke();
         StartCoroutine(Dissapear());
@@ -167,6 +169,11 @@ public class AIEnemy : MonoBehaviour, IDamageFromWeapon
         yield return new WaitForSeconds(3f);
        gameObject.SetActive(false);
        transform.position = Vector3.zero;
+    }
+
+    public void Hit()
+    {
+       Debug.Log("Hit");
     }
 
 

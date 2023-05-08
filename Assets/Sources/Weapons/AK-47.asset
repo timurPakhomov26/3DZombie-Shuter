@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: AK-47
   m_EditorClassIdentifier: 
   _name: AK-47
+  _type: 0
+  _damage: 7
+  _price: 10
+  _rateOfFire: 0.07

@@ -10,7 +10,7 @@ public class Home : MonoBehaviour
     [SerializeField] private float _healthPoint = 20f;
     [SerializeField] private GameObject _canvas;
     [SerializeField] private Camera _camera;
-    private float _currentHealthPoint;
+    public float _currentHealthPoint;
 
 
     private void Start() 

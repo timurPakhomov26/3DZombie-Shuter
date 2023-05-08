@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: Colt
   m_EditorClassIdentifier: 
   _name: Colt
+  _type: 1
+  _damage: 10
+  _price: 0
+  _rateOfFire: 1
