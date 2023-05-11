@@ -24,6 +24,8 @@ public class Weapon : MonoBehaviour
     private float _time;
     private PlayerStates _playerStates;
 
+    private bool _isMobileButtonDown = false;
+
     
    private void OnEnable() 
    {
@@ -46,8 +48,17 @@ public class Weapon : MonoBehaviour
 
       for(int i = 0; i < _items.Length; i++)
       {
-         if(Input.GetKeyDown((i + 1).ToString()) == false) 
+         if(DeviceTypes.Instance.CurrentDeviceType == DeviceTypeWEB.Desktop)
+         {
+            if(Input.GetKeyDown((i + 1).ToString()) == false) 
              continue;
+         }
+         else 
+         {
+           EquipItem(_uiController.WeaponIndex);
+           break;
+         }
+         
 
          EquipItem(i);
          break;
@@ -57,13 +68,28 @@ public class Weapon : MonoBehaviour
        
        if(_items[_index].WeaponInfoo.Type == WeaponType.Automatic)
        {
-          AutomaticShoot();
+           if(DeviceTypes.Instance.CurrentDeviceType == DeviceTypeWEB.Desktop)
+           {
+              AutomaticShoot();
+
+           }
+           else
+           {
+              MobileShoot();
+           }
        }
        else if(_items[_index].WeaponInfoo.Type == WeaponType.NonAutomatic)
        {
-          NonAutomaticShoot();
-       }
+          if(DeviceTypes.Instance.CurrentDeviceType == DeviceTypeWEB.Desktop)
+           {
+              NonAutomaticShoot();
 
+           }
+           else
+           {
+              MobileShoot();
+           }
+       }
     }
     private void AutomaticShoot()
     {
@@ -97,6 +123,25 @@ public class Weapon : MonoBehaviour
          _items[_index]._shotSound.Stop();
 
        }  
+    }
+
+
+    public void MobileShootButton()
+    {
+       _isMobileButtonDown = true;
+    }
+
+    private void MobileShoot()
+    {
+      if(_isMobileButtonDown == true && _time >= _items[_index].WeaponInfoo.RateOfFire)
+      {
+           _items[_index]._shotSound.Play();
+
+           BulletFly();
+           OnShot?.Invoke();
+           _time = 0;
+           _isMobileButtonDown = false;
+      }
     }
 
     private void BulletFly()

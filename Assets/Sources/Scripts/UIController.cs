@@ -18,9 +18,12 @@ public class UIController : MonoBehaviour
    [SerializeField] private Text _coins;
    [SerializeField] private EnemyesPoolController _enemyController;
 
+   [SerializeField] private GameObject _mobileUIPanel;
+
    [SerializeField] private PlayerMovement _playerMovement;
    [SerializeField] private Weapon _weapon;
    [SerializeField] private int _weaponIndex;
+   [SerializeField] private TouchLook _touchLook;
    [SerializeField] private MouseLook _mouseLook;
    [SerializeField] private GameObject _startPanel;
    [SerializeField] private PlayerUI _playerUI;
@@ -40,8 +43,8 @@ public class UIController : MonoBehaviour
    [SerializeField] private int _medicineChestPrice;
    public int WeaponIndex => _weaponIndex;
 
-         
-    
+
+
      private void OnEnable() 
      {
        PlayerUI.OnDie += Lose; 
@@ -65,7 +68,7 @@ public class UIController : MonoBehaviour
      private void Awake() 
      {
        _deadZombies = 0;
-       SetState(0,true,false);
+       SetState(0,true,false,false);
        SetText();
       _allZombiesCount = Mathf.CeilToInt((_enemyController.CreateZombieValue + _enemyController.CreateHeadZombieValue) * 
          PlayerData.ZombyCountKoefficent);
@@ -74,11 +77,29 @@ public class UIController : MonoBehaviour
 
     private void Start() 
     {
-      Cursor.lockState = CursorLockMode.None;
+     // Cursor.lockState = CursorLockMode.Locked;
        _medicineSchestPriceText.text = _medicineChestPrice.ToString();
        _runBustPriceText.text = _runBustPrice.ToString();
        _winPanel.SetActive(false);
        _losePanel.SetActive(false);
+
+    if(DeviceTypes.Instance.CurrentDeviceType == DeviceTypeWEB.Mobile)
+     {
+      _mouseLook.enabled = false;
+      _touchLook.enabled = true;
+       Cursor.lockState = CursorLockMode.Confined;
+       // Cursor.lockState = CursorLockMode.Locked;
+       // Cursor.visible = true;
+        _mobileUIPanel.SetActive(true);
+     }
+     else
+     {
+       // Cursor.lockState = CursorLockMode.Confined;
+       // Cursor.visible = true;
+        _mouseLook.enabled = true;
+        _touchLook.enabled = false;
+        _mobileUIPanel.SetActive(false);
+     }
     }
     
 
@@ -114,7 +135,7 @@ public class UIController : MonoBehaviour
     private void Win()
     {
       _winPanel.SetActive(true);
-       SetState(0,false,false);
+       SetState(0,false,false,false);
 
       _zobmieAudio.Stop();
     }
@@ -122,19 +143,17 @@ public class UIController : MonoBehaviour
     private void Lose()
     {
       _losePanel.SetActive(true);
-      SetState(0,false,false);
+      SetState(0,false,false,false);
       _zobmieAudio.Stop();
     }
 
-    private void SetState(int timeScale,bool startPanel,bool scripts)
+    private void SetState(int timeScale,bool startPanel,bool scripts,bool mouseLook)
     {
-       Cursor.lockState = CursorLockMode.None;
-      // Cursor.visible = true;
        Time.timeScale = timeScale;  
        _startPanel.SetActive(startPanel);
        _playerMovement.enabled = scripts; 
        _weapon.enabled = scripts; 
-       _mouseLook.enabled = scripts;
+       _mouseLook.enabled = mouseLook;
     }
 
     private void SetText()
@@ -149,9 +168,21 @@ public class UIController : MonoBehaviour
    public void StartGame()
    {
       if(_items[WeaponIndex].PricePanel.activeInHierarchy == false)
-      {
-          SetState(1,false,true);
-        _zobmieAudio.Play();
+      { 
+         if(DeviceTypes.Instance.CurrentDeviceType == DeviceTypeWEB.Desktop)
+         {
+           Cursor.lockState = CursorLockMode.Locked;
+           SetState(1,false,true,true);
+
+         _zobmieAudio.Play();
+
+         }
+         else
+         {
+          
+           SetState(1,false,true,false);
+            _zobmieAudio.Play();
+         }
       }   
    }
     
@@ -174,8 +205,18 @@ public class UIController : MonoBehaviour
 
     public void Revival()
     {
-      _losePanel.SetActive(false);
-      SetState(1,false,true);
+      if(DeviceTypes.Instance.CurrentDeviceType == DeviceTypeWEB.Desktop)
+      {
+        _losePanel.SetActive(false);
+        SetState(1,false,true,true);
+      }
+
+      else
+      {
+        _losePanel.SetActive(false);
+        SetState(1,false,true,false);
+
+      }
       _playerUI._currentHealthPoint = 30;
       _home._currentHealthPoint = 100;
     }
@@ -206,8 +247,7 @@ public class UIController : MonoBehaviour
          PlayerData.RunBustCount --;
          ReloadText();
          OnUseRunBust?.Invoke();
-      }
-      
+      }   
    }
 
    public void UseMedicinechest()

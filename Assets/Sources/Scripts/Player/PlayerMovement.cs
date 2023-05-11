@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public  enum PlayerStates
 {
    Move,
@@ -26,13 +25,18 @@ public class PlayerMovement : MonoBehaviour
 
    [SerializeField] private Image _staminaBar;
    [SerializeField] private float _staminaValue;
-   [SerializeField]private bool _isGrounded;
+   [SerializeField] private bool _isGrounded;
     private float _currentStaminaValue;
     [SerializeField] private float _runBustSpeed = 1;
     private float _currentRunBustSpeed;
-   
-   
-   private Vector3 _velocity;
+    private Vector3 _velocity;
+
+    [Header("Mobile")] 
+    [SerializeField] private FixedJoystick _joystick;
+    private Vector3 _moveMobile;
+    private bool _isMobileJumpButtonDown = false;
+    private bool _isMobileAccelerationButton = false;
+
    
 
    private void OnEnable() 
@@ -67,23 +71,16 @@ public class PlayerMovement : MonoBehaviour
         _velocity.y = -2f;
      }
 
+    
+    if(DeviceTypes.Instance.CurrentDeviceType == DeviceTypeWEB.Desktop)
+     {
+       var x = Input.GetAxis("Horizontal");
+       var z = Input.GetAxis("Vertical");
 
-      var x = Input.GetAxis("Horizontal");
-      var z = Input.GetAxis("Vertical");
-
-      if((x != 0 || z != 0) && _isGrounded == true)
-      {
-          OnPlayerMove?.Invoke(true);
-      }
-      else
-      {
-          OnPlayerMove?.Invoke(false);
-
-      }
-         
-            
-         
       Vector3 move = transform.right * x + transform.forward * z;
+
+      JumpPC();
+      _controller.Move(_velocity * Time.deltaTime);
 
       if(_isGrounded)
       {
@@ -102,15 +99,37 @@ public class PlayerMovement : MonoBehaviour
       else  
       {
         SetMove(move,_speedInAir);
-
       }    
-       
-      Jump();
+
+         
+
+     }
+     else if(DeviceTypes.Instance.CurrentDeviceType == DeviceTypeWEB.Mobile)
+     {
+       _moveMobile = new Vector3(_joystick.Horizontal * Time.deltaTime, 0f, _joystick.Vertical * Time.deltaTime); 
+     
+       JumpMobile();
 
       _controller.Move(_velocity * Time.deltaTime);
-   }
 
-   private void Jump()
+       if(_isGrounded)
+      {
+         if(_isMobileAccelerationButton == true && _currentStaminaValue > 2f)
+         {
+            SetMove(_moveMobile,_acceleration * 5f);
+           _currentStaminaValue -= 7 * Time.deltaTime *2f;
+         }
+         else
+         {
+           SetMove(_moveMobile,_speed * 7f);
+            _currentStaminaValue += 7 * Time.deltaTime * 0.9f;
+         }   
+     }     
+    } 
+  
+   }
+  
+   private void JumpPC()
    { 
        if(Input.GetKeyDown(KeyCode.Space) && _isGrounded)
        {
@@ -122,7 +141,31 @@ public class PlayerMovement : MonoBehaviour
       _velocity.y += GRAVITY_SCALE * Time.deltaTime;
    }
 
+   
 
+    private void JumpMobile()
+    {
+        if(_isGrounded && _isMobileJumpButtonDown == true)
+        {
+           _currentStaminaValue -= 7f;
+           _velocity.y = Mathf.Sqrt(_jumpHeight * GRAVITY_SCALE * -5f);
+           _isMobileJumpButtonDown = false;
+        }
+
+        _velocity.y += GRAVITY_SCALE * Time.deltaTime;
+    }
+
+    public void JumpMobileButton()
+    {
+       _isMobileJumpButtonDown = true;
+    }
+
+    public void EnterMobileAcceleration()
+    {
+        _isMobileAccelerationButton = true;
+    }
+    
+   
    private void ChangeStamina()
     {
        if(_currentStaminaValue > _staminaValue)

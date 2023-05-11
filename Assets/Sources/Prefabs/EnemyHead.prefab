@@ -71,10 +71,10 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 64
-  _playerAttackField: 6
-  _homeAttackField: 4
+  _playerAttackField: 8
+  _homeAttackField: 8
   _moveSpeed: 5
-  _health: 19
+  _health: 30
   _timeToAttack: 2
   _damage: 5
   _animator: {fileID: 1992266516073648633}

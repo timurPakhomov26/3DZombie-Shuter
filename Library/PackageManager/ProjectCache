@@ -5,72 +5,21 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638182819896384509
-    m_Hash: 187856647
+      ticks: 638193269506900331
+    m_Hash: 3015326141
   m_LockFileStatus:
     m_FilePath: D:/my games/3DZombie-Shuter/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638182819898007256
-    m_Hash: 111054194
+      ticks: 638193269517044795
+    m_Hash: 3740522630
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_PackageAssets:
   m_Packages:
     m_ResolvedPackages:
-    - packageId: com.unity.2d.sprite@1.0.0
-      testable: 0
-      isDirectDependency: 1
-      version: 1.0.0
-      source: 2
-      resolvedPath: D:\my games\3DZombie-Shuter\Library\PackageCache\com.unity.2d.sprite@1.0.0
-      assetPath: Packages/com.unity.2d.sprite
-      name: com.unity.2d.sprite
-      displayName: 2D Sprite
-      author:
-        name: 
-        email: 
-        url: 
-      category: 2D
-      type: 
-      description: Use Unity Sprite Editor Window to create and edit Sprite asset
-        properties like pivot, borders and Physics shape
-      status: 4
-      errors: []
-      versions:
-        all:
-        - 1.0.0
-        compatible:
-        - 1.0.0
-        verified: 1.0.0
-      dependencies: []
-      resolvedDependencies: []
-      keywords:
-      - 2d
-      - sprite
-      - sprite editor window
-      registry:
-        id: 
-        name: 
-        url: 
-        scopes: []
-        isDefault: 0
-        capabilities: 0
-      hasRegistry: 0
-      hideInEditor: 1
-      entitlements:
-        isAllowed: 1
-      isAssetStorePackage: 0
-      datePublishedTicks: 0
-      documentationUrl: 
-      hasRepository: 0
-      repository:
-        type: 
-        url: 
-        revision: 
-        path: 
     - packageId: com.unity.collab-proxy@1.15.12
       testable: 0
       isDirectDependency: 1
@@ -1020,6 +969,7 @@ m_PackageAssets:
         - 1.6.2
         - 1.6.3
         - 1.6.4
+        - 1.6.5
         - 1.7.0-pre.1
         - 1.7.0-pre.2
         - 1.7.0
@@ -1054,6 +1004,7 @@ m_PackageAssets:
         - 1.6.2
         - 1.6.3
         - 1.6.4
+        - 1.6.5
         - 1.7.0-pre.1
         - 1.7.0-pre.2
         - 1.7.0
@@ -1134,6 +1085,7 @@ m_PackageAssets:
       versions:
         all:
         - 1.0.0
+        - 3.0.0-exp.1
         compatible:
         - 1.0.0
         verified: 1.0.0
